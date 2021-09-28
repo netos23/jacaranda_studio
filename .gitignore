@@ -1,0 +1,17 @@
+cmake-build-debug
+cmake-build-debug/*
+.idea
+.idea/*
+**/*.dll
+**/*.exe
+build/*
+bin-*/*
+distrib/build_*/*
+**.bak
+**.orig
+screenshot.bmp
+*.pyc
+Thumbs.db
+OpenGL-tutorial_v*
+**.mtl
+.DS_Store
