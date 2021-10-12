@@ -46,7 +46,7 @@
 #endif
 
 #define GLFW_INCLUDE_NONE
-#include "../../../../../Downloads/glfw-3.3.4/include/GLFW/glfw3.h"
+#include "../../glfw-3.3.4/include/GLFW/glfw3.h"
 
 #define _GLFW_INSERT_FIRST      0
 #define _GLFW_INSERT_LAST       1
