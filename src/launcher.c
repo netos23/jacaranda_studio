@@ -33,7 +33,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
-    mainWindow = glfwCreateWindow(1024, 768, "Jacaranda studio", NULL, NULL);
+    mainWindow = glfwCreateWindow(1024, 768, "Cube", NULL, NULL);
     if (mainWindow == NULL) {
         fprintf(stderr,
                 "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. "
@@ -61,44 +61,84 @@ int main() {
     glfwGetFramebufferSize(mainWindow, &viewportWidth, &viewPortHeight);
     glViewport(0, 0, viewportWidth, viewPortHeight);
 
+    glEnable(GL_DEPTH_TEST);
+
     GLuint shader = loadShader("src/shaders/vertex.shader",
                                "src/shaders/fragment.shader");
 
 
     // Set up vertex data (and buffer(s)) and attribute pointers
-    GLfloat vertices[] = {
-            // Positions          // Colors           // Texture Coords
-            0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-            0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-            -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-            -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
-    };
-    GLuint indices[] = {  // Note that we start from 0!
-            0, 1, 3, // First Triangle
-            1, 2, 3  // Second Triangle
+    float vertices[] = {
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+            0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+            -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+            0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+            -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+            -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
     };
 
-    GLuint VBO, VAO, EBO;
+    vector4_t cubePositions[] = {
+            vec3(0.0f, 0.0f, 0.0f),
+            vec3(2.0f, 5.0f, -15.0f),
+            vec3(-1.5f, -2.2f, -2.5f),
+            vec3(-3.8f, -2.0f, -12.3f),
+            vec3(2.4f, -0.4f, -3.5f),
+            vec3(-1.7f, 3.0f, -7.5f),
+            vec3(1.3f, -2.0f, -2.5f),
+            vec3(1.5f, 2.0f, -2.5f),
+            vec3(1.5f, 0.2f, -1.5f),
+            vec3(-1.3f, 1.0f, -1.5f)
+    };
+
+    GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) 0);
     glEnableVertexAttribArray(0);
-    // Color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
     // TexCoord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *) (6 * sizeof(GLfloat)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *) (3 * sizeof(GLfloat)));
     glEnableVertexAttribArray(2);
 
     glBindVertexArray(0);
@@ -135,27 +175,53 @@ int main() {
         glfwPollEvents();
         // Clear the screen.
         glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glBindTexture(GL_TEXTURE_2D, texture);
 
         glUseProgram(shader);
 
         // Create transformations
-        matrix4_t transform = oneMatrix();
-        transform = translate(transform, vec3(0.5f, -0.5f, 0.0f));
-        transform = scale(transform, vec3(0.5f, 0.5f, 0.5f));
-        transform = rotate(transform, rad((GLfloat) -glfwGetTime() * 50.0f), vec3(1.0f, 1.0f, 0.0f));
+
+        matrix4_t view = oneMatrix();
+        matrix4_t projection;
+
+
+        // view = rotate(view, (GLfloat) glfwGetTime() * rad(5), vec3(0.f, 1.f, 0.f));
+        view = translate(view, vec3(0.0f, 0.0f, -5.0f));
+        projection = persp(45.f, (GLfloat) viewportWidth / (GLfloat) viewPortHeight,
+                            0.1f, 100.0f);
+
 
         // Get matrix's uniform location and set matrix
-        GLint transformLoc = glGetUniformLocation(shader, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, transform);
+        GLint modelLoc = glGetUniformLocation(shader, "model");
+        GLint viewLoc = glGetUniformLocation(shader, "view");
+        GLint projectionLoc = glGetUniformLocation(shader, "projection");
+
+        glUniformMatrix4fv(viewLoc, 1, GL_TRUE, view);
+        glUniformMatrix4fv(projectionLoc, 1, GL_TRUE, projection);
 
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
+        for (int i = 0; i < 10; i++) {
+            matrix4_t model = oneMatrix();
+            model = translate(model, cubePositions[i]);
+            if (i % 2 == 0) {
+                model = rotate(model, (GLfloat) glfwGetTime() * rad(55.0f),
+                               vec3(0.1f * (GLfloat) i, 0.1f * (GLfloat) i, 0.1f * (GLfloat) i));
+            } else {
+                model = rotate(model, (GLfloat) i * rad(20.0f),
+                               vec3(0.5f, 1.0f, 0.0f));
+            }
+            glUniformMatrix4fv(modelLoc, 1, GL_TRUE, model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            freeMatrix(model);
+        }
         glBindVertexArray(0);
 
-        freeMatrix(transform);
+        freeMatrix(view);
+        freeMatrix(projection);
         // Swap buffers
         glfwSwapBuffers(mainWindow);
 
@@ -163,7 +229,6 @@ int main() {
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();

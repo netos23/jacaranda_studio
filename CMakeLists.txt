@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 99)
 find_package(OpenGL REQUIRED)
 
 add_executable(jacaranda_studio
-        src/les4.c
+        src/launcher.c
         src/math/vector.c
         src/math/vector.h
         src/core/shader.c

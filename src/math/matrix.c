@@ -4,7 +4,10 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include "math.h"
 #include "matrix.h"
+
+#define cord(r, c, n) (r*n+c)
 
 static const int N = 4;
 
@@ -30,6 +33,50 @@ matrix4_t zeroMatrix() {
     }
 
     return zero;
+}
+
+matrix4_t persp(GLfloat fov, GLfloat aspectRatio, GLfloat front, GLfloat back) {
+    GLfloat tan = tanf(rad(fov / 2));
+    GLfloat height = front * tan;
+    GLfloat width = height * aspectRatio;
+
+    return perspective(-width, width, -height, height, front, back);
+}
+
+matrix4_t perspective(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+    matrix4_t res = zeroMatrix();
+
+    res[0] = 2.f * zNear / (right - left);
+    res[2] = (right + left) / (right - left);
+    res[N + 1] = 2.f * zNear / (top - bottom);
+    res[N + 2] = (top + bottom) / (top - bottom);
+    res[2 * N + 2] = -(zFar + zNear) / (zFar - zNear);
+    res[2 * N + 3] = -(2.f * zFar * zNear) / (zFar - zNear);
+    res[3 * N + 2] = -1.f;
+
+    return res;
+}
+
+matrix4_t ortho(GLfloat fov, GLfloat aspectRatio, GLfloat front, GLfloat back){
+    GLfloat tan = tanf(rad(fov / 2));
+    GLfloat height = front * tan;
+    GLfloat width = height * aspectRatio;
+
+    return orthographic(-width, width, -height, height, front, back);
+}
+
+matrix4_t orthographic(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar) {
+    matrix4_t res = zeroMatrix();
+
+    res[0] = 2.f / (right - left);
+    res[3] = -(right + left) / (right - left);
+    res[N + 1] = 2.f / (top - bottom);
+    res[N + 3] = -(top + bottom) / (top - bottom);
+    res[N * 2 + 2] = -2.f / (zFar - zNear);
+    res[N * 2 + 3] = -(zFar + zNear) / (zFar - zNear);
+    res[N * 3 + 3] = 1.f;
+
+    return res;
 }
 
 /// translate with projection

@@ -13,6 +13,14 @@ matrix4_t oneMatrix();
 
 matrix4_t zeroMatrix();
 
+matrix4_t perspective(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
+
+matrix4_t persp(GLfloat fov, GLfloat aspectRatio, GLfloat front, GLfloat back);
+
+matrix4_t orthographic(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
+
+matrix4_t ortho(GLfloat fov, GLfloat aspectRatio, GLfloat front, GLfloat back);
+
 matrix4_t translate(matrix4_t transform, vector4_t val);
 
 matrix4_t scale(matrix4_t transform, vector4_t val);
